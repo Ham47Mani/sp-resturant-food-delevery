@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// ========================== Start Global Rules ==========================
+* { 
+  @apply select-none;
+  ::-webkit-scrollbar { @apply w-1 h-2 }
+  ::-webkit-scrollbar-thumb { @apply bg-primary-color rounded-lg }
+}
+body {
+  overflow-x: hidden;
+}
+// ========================== End Global Rules ==========================
+
+// ========================== Start  ==========================
+
+// ========================== End  ==========================

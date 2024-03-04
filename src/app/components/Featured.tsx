@@ -1,7 +1,17 @@
-import { featuredProducts } from "@/utility/constants"
+import { DATARESPONSE, PRODUCT } from "@/utility/types";
 import Image from "next/image"
 
-const Featured = () => {
+// Get All products features
+const getFeaturiesProducts = async() => {
+  const res = await fetch("http://localhost:3000/api/products", {cache: "no-store"});
+  if(!res.ok) throw new Error("Failed!!, can not get all products");
+  return res.json();
+}
+
+const Featured = async () => {
+  const resData: DATARESPONSE = await getFeaturiesProducts();
+  const featuredProducts: PRODUCT[] = resData.data;
+
   return (
     <div className="features w-screen overflow-x-scroll text-primary-color py-6">
       {/* ------------ Wrapper ------------ */}

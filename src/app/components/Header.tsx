@@ -2,10 +2,10 @@ import Link from "next/link"
 import Menu from "./Menu"
 import CartIcon from "./CartIcon";
 import Image from "next/image";
+import UserLinks from "./UserLinks";
 
 const Header = () => {
-  const user = false;
-
+  
   return (
     <div className="border-b-2 border-primary-color">
       <div className="container flex justify-between items-center h-12 md:h-16 p-4 text-primary-color">
@@ -29,11 +29,7 @@ const Header = () => {
             <Image src="/phone.png" alt="phone icon" width={24} height={24}/>
             <span className="tracking-wider">(+213) 777-586-919</span>
           </div>
-          {
-            !user ?
-            <Link href="/login" className="transition-all hover:text-second-color duration-100">Login</Link> : 
-            <Link href="/orders" className="transition-all hover:text-second-color duration-100">Orders</Link>
-          }
+          <UserLinks />
           <CartIcon />
         </div>
       </div>

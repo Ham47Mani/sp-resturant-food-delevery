@@ -1,7 +1,21 @@
+"use client";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const LoginPage = () => {
+  const {data, status} = useSession();
+  const router = useRouter();
+
+  if(status === "loading") {
+    return <p>Loading...</p>
+  }
+  if(status === "authenticated") {
+    return router.push("/")
+  }
+
   return (
     <div className="min-h-[calc(100vh-10rem)] flex items-center justify-center">
       <div className="flex items-center justify-center h-[60vh] md:min-w-[700px] border shadow-2xl rounded-3xl">
@@ -13,10 +27,12 @@ const LoginPage = () => {
         <div className="md:w-1/2 p-7 flex flex-col justify-center gap-6">
           <h1 className="text-3xl font-bold">Welcome</h1>
           <p className="text-gray-500">log into your account or create a new one using social buttons</p>
-          <button className="flex items-center gap-2 p-3 w-3/4 rounded-lg border hover:shadow-md hover:bg-fuchsia-50  duration-200 transition-all">
+          {/* --- Google --- */}
+          <button onClick={async () => await signIn("google")} className="flex items-center gap-2 p-3 w-3/4 rounded-lg border hover:shadow-md hover:bg-fuchsia-50  duration-200 transition-all">
             <Image src="/google.png" alt="google icon" width={20} height={20} className="object-contain"/>
             <span className="text-sm sm:text-base">Sign in wth Google</span>
           </button>
+          {/* --- Facebook --- */}
           <button className="flex items-center gap-2 p-3 w-3/4 rounded-lg border hover:shadow-md hover:bg-fuchsia-50 duration-200 transition-all">
             <Image src="/facebook.png" alt="google icon" width={20} height={20} className="object-contain"/>
             <span className="text-sm sm:text-base">Sign in wth Facebook</span>

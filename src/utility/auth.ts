@@ -1,0 +1,58 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { NextAuthOptions, getServerSession } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { prisma } from "./connect";
+import { User } from "@prisma/client";
+
+// Modify the session interface
+declare module "next-auth" {
+  interface Session {
+    user: User & {
+      isAdmin: boolean;
+    } 
+  }
+}
+
+// Modify the token interface
+declare module "next-auth/jwt" {
+  interface JWT {
+    isAdmin: boolean;
+  }
+}
+
+// Auth Provider Options
+export const authProvider: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt"
+  },
+  providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!
+    })
+  ],
+  callbacks: {
+    // Check & add isAdmin to session
+    async session ({token, session}) {
+      if (token) {
+        session.user.isAdmin = token.isAdmin
+      }
+      return session;
+    },
+
+    // Add isAdmin to token
+    async jwt ({token}) {
+      const userInDb = await prisma.user.findUnique({
+        where: {
+          email: token.email!
+        }
+      })
+      token.isAdmin = userInDb?.isAdmin!;
+      return token;
+    }
+  }
+}
+
+// Get Session
+export const getAuthSession = () => getServerSession(authProvider);
